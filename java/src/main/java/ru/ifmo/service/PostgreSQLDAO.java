@@ -1,5 +1,8 @@
 package ru.ifmo.service;
 
+import ru.ifmo.service.exceptions.InsertingException;
+import ru.ifmo.service.exceptions.InvalidEntityException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +14,14 @@ public class PostgreSQLDAO {
     private Connection connection;
 
     PostgreSQLDAO() {
-        this.connection = ConnectionUtil.getConnection();
+        this.connection = ru.ifmo.service.ConnectionUtil.getConnection();
     }
 
-    public List<Sculpture> getAllSculptures() {
+    public List<ru.ifmo.service.Sculpture> getAllSculptures() {
         return executeQuery("SELECT * FROM sculptures");
     }
 
-    public List<Sculpture> findSculptures(MyRequest request) {
+    public List<ru.ifmo.service.Sculpture> findSculptures(MyRequest request) {
         String sql = "SELECT * FROM sculptures WHERE " +
                 "(id = " + request.getId() + " OR " + request.getId() + " = 0) AND " +
                 "(name = '" + request.getName() + "' OR '" + request.getName() + "' = '' OR '" + request.getName() + "' = '?') AND " +
@@ -31,53 +34,83 @@ public class PostgreSQLDAO {
         return executeQuery(sql);
     }
 
-    public int createSculpture(String name, String author, int year, String material, float height, float width) throws SQLException {
+    public int createSculpture(String name, String author, int year, String material, float height, float width) throws InsertingException {
         String sql = "INSERT INTO sculptures (name, author, year, material, height, width) VALUES(?, ?, ?, ?, ?, ?)";
-        PreparedStatement preparedStatement = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, name);
-        preparedStatement.setString(2, author);
-        preparedStatement.setInt(3, year);
-        preparedStatement.setString(4, material);
-        preparedStatement.setFloat(5, height);
-        preparedStatement.setFloat(6, width);
+        PreparedStatement preparedStatement = null;
+        int id = 0;
+        try {
+            preparedStatement = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, author);
+            preparedStatement.setInt(3, year);
+            preparedStatement.setString(4, material);
+            preparedStatement.setFloat(5, height);
+            preparedStatement.setFloat(6, width);
 
-        int affectedRows = preparedStatement.executeUpdate();
-
-        if (affectedRows == 0) {
-            return -1;
-        }
-
-        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            int affectedRows = preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return (int) generatedKeys.getLong(1);
+                id = (int) generatedKeys.getLong(1);
             }
-            else {
-                return -1;
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        if (id == 0) {
+            ru.ifmo.service.SculptureServiceFault fault = ru.ifmo.service.SculptureServiceFault.defaultInstance();
+            fault.setMessage("Error During creation entity");
+            throw new InsertingException("Error During creation entity", fault);
+        }
+
+        return id;
     }
 
-    public int updateSculpture(int id, MyRequest request) throws SQLException {
+    public int updateSculpture(int id, MyRequest request) throws InvalidEntityException {
         String sql = "UPDATE sculptures SET" + createUpdateQuery(request) + " WHERE id=?";
 
-        PreparedStatement preparedStatement = this.connection.prepareStatement(sql);
-        preparedStatement.setInt(1, id);
+        PreparedStatement preparedStatement = null;
+        int affectedRows = 0;
+        try {
+            preparedStatement = this.connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            affectedRows = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        int affectedRows = preparedStatement.executeUpdate();
-        return affectedRows == 0 ? -1 : 1;
+        if (affectedRows == 0) {
+            ru.ifmo.service.SculptureServiceFault fault = ru.ifmo.service.SculptureServiceFault.defaultInstance();
+            fault.setMessage("Invalid entity");
+            throw new InvalidEntityException("Invalid entity", fault);
+        }
+
+        return affectedRows;
     }
 
-    public int deleteSculpture(int id) throws SQLException {
+    public int deleteSculpture(int id) throws InvalidEntityException {
         String sql = "DELETE FROM sculptures WHERE id = ?";
-        PreparedStatement preparedStatement = this.connection.prepareStatement(sql);
-        preparedStatement.setInt(1, id);
 
-        int affectedRows = preparedStatement.executeUpdate();
-        return affectedRows == 0 ? -1 : 1;
+        PreparedStatement preparedStatement = null;
+        int affectedRows = 0;
+        try {
+            preparedStatement = this.connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            affectedRows = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (affectedRows == 0) {
+            ru.ifmo.service.SculptureServiceFault fault = ru.ifmo.service.SculptureServiceFault.defaultInstance();
+            fault.setMessage("Invalid entity");
+            throw new InvalidEntityException("Invalid entity", fault);
+        }
+
+        return affectedRows;
     }
 
-    private List<Sculpture> executeQuery(String sql) {
-        List<Sculpture> sculptures = new ArrayList<>();
+    private List<ru.ifmo.service.Sculpture> executeQuery(String sql) {
+        List<ru.ifmo.service.Sculpture> sculptures = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -89,7 +122,7 @@ public class PostgreSQLDAO {
                 String material = rs.getString("material");
                 float height = rs.getFloat("height");
                 float width = rs.getFloat("width");
-                Sculpture sculpture = new Sculpture(id, name, author, year, material, height, width);
+                ru.ifmo.service.Sculpture sculpture = new ru.ifmo.service.Sculpture(id, name, author, year, material, height, width);
                 sculptures.add(sculpture);
             }
         } catch (SQLException ex) {

@@ -19,7 +19,7 @@ import java.util.List;
  */
 @WebService(name = "SculptureWebService", targetNamespace = "http://service.ifmo.ru/")
 @XmlSeeAlso({
-    ru.ifmo.client.ObjectFactory.class
+    ObjectFactory.class
 })
 public interface SculptureWebService {
 
@@ -34,6 +34,9 @@ public interface SculptureWebService {
      * @param height
      * @return
      *     returns int
+     * @throws ru.ifmo.client.AuthException
+     * @throws ru.ifmo.client.InsertingException
+     * @throws InvalidCreatingParametersException
      */
     @WebMethod
     @WebResult(targetNamespace = "")
@@ -51,38 +54,9 @@ public interface SculptureWebService {
             @WebParam(name = "height", targetNamespace = "")
                     float height,
             @WebParam(name = "width", targetNamespace = "")
-                    float width);
-
-    /**
-     * 
-     * @param q
-     * @param id
-     * @return
-     *     returns int
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "updateSculpture", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.UpdateSculpture")
-    @ResponseWrapper(localName = "updateSculptureResponse", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.UpdateSculptureResponse")
-    public int updateSculpture(
-            @WebParam(name = "id", targetNamespace = "")
-                    int id,
-            @WebParam(name = "q", targetNamespace = "")
-                    ru.ifmo.client.MyRequest q);
-
-    /**
-     * 
-     * @param id
-     * @return
-     *     returns int
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "deleteSculpture", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.DeleteSculpture")
-    @ResponseWrapper(localName = "deleteSculptureResponse", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.DeleteSculptureResponse")
-    public int deleteSculpture(
-            @WebParam(name = "id", targetNamespace = "")
-                    int id);
+                    float width)
+        throws ru.ifmo.client.AuthException, ru.ifmo.client.InsertingException, InvalidCreatingParametersException
+    ;
 
     /**
      * 
@@ -100,6 +74,7 @@ public interface SculptureWebService {
      * @param q
      * @return
      *     returns java.util.List<ru.ifmo.client.Sculpture>
+     * @throws IllegalQException
      */
     @WebMethod
     @WebResult(targetNamespace = "")
@@ -107,6 +82,50 @@ public interface SculptureWebService {
     @ResponseWrapper(localName = "findSculpturesResponse", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.FindSculpturesResponse")
     public List<ru.ifmo.client.Sculpture> findSculptures(
             @WebParam(name = "q", targetNamespace = "")
-                    ru.ifmo.client.MyRequest q);
+                    MyRequest q)
+        throws IllegalQException
+    ;
+
+    /**
+     * 
+     * @param id
+     * @return
+     *     returns int
+     * @throws ru.ifmo.client.AuthException
+     * @throws ru.ifmo.client.InvalidEntityException
+     * @throws IllegalIdException
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "deleteSculpture", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.DeleteSculpture")
+    @ResponseWrapper(localName = "deleteSculptureResponse", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.DeleteSculptureResponse")
+    public int deleteSculpture(
+            @WebParam(name = "id", targetNamespace = "")
+                    int id)
+        throws ru.ifmo.client.AuthException, IllegalIdException, ru.ifmo.client.InvalidEntityException
+    ;
+
+    /**
+     * 
+     * @param q
+     * @param id
+     * @return
+     *     returns int
+     * @throws ru.ifmo.client.AuthException
+     * @throws ru.ifmo.client.InvalidEntityException
+     * @throws IllegalQException
+     * @throws IllegalIdException
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "updateSculpture", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.UpdateSculpture")
+    @ResponseWrapper(localName = "updateSculptureResponse", targetNamespace = "http://service.ifmo.ru/", className = "ru.ifmo.client.UpdateSculptureResponse")
+    public int updateSculpture(
+            @WebParam(name = "id", targetNamespace = "")
+                    int id,
+            @WebParam(name = "q", targetNamespace = "")
+                    MyRequest q)
+        throws ru.ifmo.client.AuthException, IllegalIdException, IllegalQException, ru.ifmo.client.InvalidEntityException
+    ;
 
 }

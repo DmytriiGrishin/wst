@@ -21,8 +21,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="author" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="year" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="material" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="height" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="width" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="height" type="{http://www.w3.org/2001/XMLSchema}float"/>
+ *         &lt;element name="width" type="{http://www.w3.org/2001/XMLSchema}float"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -51,7 +51,7 @@ public class MyRequest {
     protected float height;
     protected float width;
 
-    public MyRequest() {
+    public void init() {
         this.id = 0;
         this.name = "";
         this.author = "";
@@ -60,7 +60,6 @@ public class MyRequest {
         this.height = 0;
         this.width = 0;
     }
-
     /**
      * Gets the value of the id property.
      * 

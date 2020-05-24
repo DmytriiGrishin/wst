@@ -86,4 +86,14 @@ public class MyRequest implements Serializable
     public void setWidth(float width) {
         this.width = width;
     }
+
+    public boolean isNull() {
+        return this.id == 0 &&
+                (this.name == null || this.name.trim().isEmpty()) &&
+                (this.author == null || this.author.trim().isEmpty()) &&
+                this.year == 0 &&
+                (this.material == null || this.material.trim().isEmpty()) &&
+                this.height == 0 &&
+                this.width == 0;
+    }
 }

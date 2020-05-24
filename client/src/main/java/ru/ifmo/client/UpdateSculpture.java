@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 public class UpdateSculpture {
 
     protected int id;
-    protected ru.ifmo.client.MyRequest q;
+    protected MyRequest q;
 
     /**
      * Gets the value of the id property.
@@ -57,10 +57,10 @@ public class UpdateSculpture {
      * 
      * @return
      *     possible object is
-     *     {@link ru.ifmo.client.MyRequest }
+     *     {@link MyRequest }
      *     
      */
-    public ru.ifmo.client.MyRequest getQ() {
+    public MyRequest getQ() {
         return q;
     }
 
@@ -69,10 +69,10 @@ public class UpdateSculpture {
      * 
      * @param value
      *     allowed object is
-     *     {@link ru.ifmo.client.MyRequest }
+     *     {@link MyRequest }
      *     
      */
-    public void setQ(ru.ifmo.client.MyRequest value) {
+    public void setQ(MyRequest value) {
         this.q = value;
     }
 

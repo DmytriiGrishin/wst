@@ -17,11 +17,11 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="author" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="height" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="height" type="{http://www.w3.org/2001/XMLSchema}float"/>
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="material" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="width" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="width" type="{http://www.w3.org/2001/XMLSchema}float"/>
  *         &lt;element name="year" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
