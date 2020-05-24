@@ -22,9 +22,9 @@ public class SculptureService
     extends Service
 {
 
-    private final static URL SCULPTURE_SERVICE_WSDL_LOCATION;
-    private final static WebServiceException SCULPTURE_SERVICE_EXCEPTION;
-    private final static QName SCULPTURE_SERVICE_QNAME = new QName("http://service.ifmo.ru/", "SculptureService");
+    private final static URL SCULPTURESERVICE_WSDL_LOCATION;
+    private final static WebServiceException SCULPTURESERVICE_EXCEPTION;
+    private final static QName SCULPTURESERVICE_QNAME = new QName("http://service.ifmo.ru/", "SculptureService");
 
     static {
         URL url = null;
@@ -34,24 +34,24 @@ public class SculptureService
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
-        SCULPTURE_SERVICE_WSDL_LOCATION = url;
-        SCULPTURE_SERVICE_EXCEPTION = e;
+        SCULPTURESERVICE_WSDL_LOCATION = url;
+        SCULPTURESERVICE_EXCEPTION = e;
     }
 
     public SculptureService() {
-        super(__getWsdlLocation(), SCULPTURE_SERVICE_QNAME);
+        super(__getWsdlLocation(), SCULPTURESERVICE_QNAME);
     }
 
     public SculptureService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), SCULPTURE_SERVICE_QNAME, features);
+        super(__getWsdlLocation(), SCULPTURESERVICE_QNAME, features);
     }
 
     public SculptureService(URL wsdlLocation) {
-        super(wsdlLocation, SCULPTURE_SERVICE_QNAME);
+        super(wsdlLocation, SCULPTURESERVICE_QNAME);
     }
 
     public SculptureService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, SCULPTURE_SERVICE_QNAME, features);
+        super(wsdlLocation, SCULPTURESERVICE_QNAME, features);
     }
 
     public SculptureService(URL wsdlLocation, QName serviceName) {
@@ -75,7 +75,7 @@ public class SculptureService
     /**
      * 
      * @param features
-     *     A list of {@link javax.xml.ws.WebServiceFeature} to configure on the proxy.  Supported features not in the <code>features</code> parameter will have their default values.
+     *     A list of {@link WebServiceFeature} to configure on the proxy.  Supported features not in the <code>features</code> parameter will have their default values.
      * @return
      *     returns SculptureWebService
      */
@@ -85,10 +85,10 @@ public class SculptureService
     }
 
     private static URL __getWsdlLocation() {
-        if (SCULPTURE_SERVICE_EXCEPTION != null) {
-            throw SCULPTURE_SERVICE_EXCEPTION;
+        if (SCULPTURESERVICE_EXCEPTION!= null) {
+            throw SCULPTURESERVICE_EXCEPTION;
         }
-        return SCULPTURE_SERVICE_WSDL_LOCATION;
+        return SCULPTURESERVICE_WSDL_LOCATION;
     }
 
 }
