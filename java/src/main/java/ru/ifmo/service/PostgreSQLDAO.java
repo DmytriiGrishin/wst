@@ -99,4 +99,110 @@ public class PostgreSQLDAO {
         List<Sculpture> sculpture = executeQuery(query);
         return sculpture;
     }
+
+    public int createSculpture(Sculpture sculpture) {
+        String sql = "INSERT INTO sculptures (name, author, year, material, height, width) VALUES(?, ?, ?, ?, ?, ?)";
+        PreparedStatement preparedStatement = null;
+        int id = 0;
+        try {
+            preparedStatement = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, sculpture.getName());
+            preparedStatement.setString(2, sculpture.getAuthor());
+            preparedStatement.setInt(3, sculpture.getYear());
+            preparedStatement.setString(4, sculpture.getMaterial());
+            preparedStatement.setFloat(5, sculpture.getHeight());
+            preparedStatement.setFloat(6, sculpture.getWidth());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                id = (int) generatedKeys.getLong(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
+    public int updateSculpture(int id, Sculpture sculpture) {
+        String sql = "UPDATE sculptures SET" + createUpdateQuery(sculpture) + " WHERE id=?";
+        PreparedStatement preparedStatement = null;
+        int affectedRows = 0;
+        try {
+            preparedStatement = this.connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            affectedRows = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return affectedRows;
+    }
+
+    public int deleteSculpture(int id) {
+        String sql = "DELETE FROM sculptures WHERE id = ?";
+
+        PreparedStatement preparedStatement = null;
+        int affectedRows = 0;
+        try {
+            preparedStatement = this.connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            affectedRows = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return affectedRows;
+    }
+
+
+    private String createUpdateQuery(Sculpture sculpture) {
+        StringBuilder stringBuilderField = new StringBuilder("(");
+        StringBuilder stringBuilderValues = new StringBuilder("(");
+        if (sculpture.getId() > 0) {
+            stringBuilderField.append("id,");
+            stringBuilderValues.append(sculpture.getId()).append(",");
+        }
+
+        if (sculpture.getName() != null) {
+            stringBuilderField.append("name,");
+            stringBuilderValues.append("'").append(sculpture.getName()).append("',");
+        }
+
+        if (sculpture.getAuthor() != null) {
+            stringBuilderField.append("author,");
+            stringBuilderValues.append("'").append(sculpture.getAuthor()).append("',");
+        }
+
+        if (sculpture.getYear() > 0) {
+            stringBuilderField.append("year,");
+            stringBuilderValues.append(sculpture.getYear()).append(",");
+        }
+
+        if (sculpture.getMaterial() != null) {
+            stringBuilderField.append("material,");
+            stringBuilderValues.append("'").append(sculpture.getMaterial()).append("',");
+        }
+
+        if (sculpture.getHeight() > 0) {
+            stringBuilderField.append("height,");
+            stringBuilderValues.append(sculpture.getHeight()).append(",");
+        }
+
+        if (sculpture.getWidth() > 0) {
+            stringBuilderField.append("width,");
+            stringBuilderValues.append(sculpture.getWidth()).append(",");
+        }
+
+        if (stringBuilderField.toString().endsWith(",")) {
+            stringBuilderField.setLength(stringBuilderField.length() - 1);
+            stringBuilderValues.setLength(stringBuilderValues.length() - 1);
+        }
+
+        stringBuilderField.append(")");
+        stringBuilderValues.append(")");
+
+        return stringBuilderField.toString() + " = " + stringBuilderValues.toString();
+    }
 }
