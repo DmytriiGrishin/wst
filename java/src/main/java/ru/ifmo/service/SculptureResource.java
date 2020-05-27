@@ -27,5 +27,28 @@ public class SculptureResource {
     public List<Sculpture> getOne(@PathParam("id") int id) {
         return new PostgreSQLDAO().findOne(id);
     }
+
+  
+    @POST
+    @Consumes("application/json")
+    public String create(Sculpture sculpture) {
+        PostgreSQLDAO dao = new PostgreSQLDAO();
+        return "{\"result\":" + dao.createSculpture(sculpture) + "}";
+    }
+
+    @PUT
+    @Consumes("application/json")
+    @Path("/{id}")
+    public String update(@PathParam("id") int id, Sculpture sculpture) {
+        PostgreSQLDAO dao = new PostgreSQLDAO();
+        return "{\"result\":" + dao.updateSculpture(id, sculpture) + "}";
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public String delete(@PathParam("id") int id) {
+        PostgreSQLDAO dao = new PostgreSQLDAO();
+        return "{\"result\":" + dao.deleteSculpture(id) + "}";
+    }
 }
 
