@@ -9,6 +9,7 @@
         <module>java</module>
         <module>java2ee</module>
         <module>client</module>
+        <module>juddi</module>
     </modules>
     <packaging>pom</packaging>
 
